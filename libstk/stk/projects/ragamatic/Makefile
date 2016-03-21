@@ -20,12 +20,13 @@ ifeq ($(strip $(INCLUDE)), )
 endif
 vpath %.h $(INCLUDE)
 
-CC       = g++
-DEFS     =   -DHAVE_GETTIMEOFDAY -D__LINUX_ALSA__
-DEFS    += -D__LITTLE_ENDIAN__
+CC       = mips-openwrt-linux-uclibc-g++
+DEFS     = -I/home/ukicar/Desktop/weio/openwrt/staging_dir/target-mips_34kc_uClibc-0.9.33.2/usr/include -I/home/ukicar/Desktop/weio/openwrt/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include -I/home/ukicar/Desktop/weio/openwrt/staging_dir/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/usr/include -I/home/ukicar/Desktop/weio/openwrt/staging_dir/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/include   -DHAVE_GETTIMEOFDAY -D__LINUX_ALSA__
+DEFS    += 
 CFLAGS   = -O3 -Wall
 CFLAGS  += -I$(INCLUDE) -I$(INCLUDE)/../src/include
-LIBRARY = -lpthread -lasound -lm 
+LIBRARY = -nodefaultlibs -lgcc -lc -lstdc++ -ldl -lm $(LIBGCC_S) -lc -lpthread -lasound
+#LIBRARY = -nodefaultlibs -lgcc -lc -luClibc++ -lstdc++ -ldl -lm $(LIBGCC_S) -lc -lpthread -lasound
 
 REALTIME = yes
 ifeq ($(REALTIME),yes)

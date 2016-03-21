@@ -6,11 +6,12 @@ SHAREDLIB = libstk.so
 MAJOR = 4
 RELEASE = 4.5.1
 
+#AR = ar -rsc
 RM = /bin/rm
 LN = /bin/ln
 OBJECT_PATH = Release
 LIBDIR = ${exec_prefix}/lib
-PREFIX = /usr/local
+PREFIX = /usr
 INCLUDEDIR = ${prefix}/include
 vpath %.o $(OBJECT_PATH)
 
@@ -42,12 +43,12 @@ else
 	INCLUDE = -I../include -I
 endif
 
-#CC       = g++
-DEFS     =   -DHAVE_GETTIMEOFDAY -D__LINUX_ALSA__
-DEFS    += -D__LITTLE_ENDIAN__
+CC       = mips-openwrt-linux-uclibc-g++
+DEFS     = -I/home/ukicar/Desktop/weio/openwrt/staging_dir/target-mips_34kc_uClibc-0.9.33.2/usr/include -I/home/ukicar/Desktop/weio/openwrt/staging_dir/target-mips_34kc_uClibc-0.9.33.2/include -I/home/ukicar/Desktop/weio/openwrt/staging_dir/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/usr/include -I/home/ukicar/Desktop/weio/openwrt/staging_dir/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2/include   -DHAVE_GETTIMEOFDAY -D__LINUX_ALSA__
+DEFS    += 
 CFLAGS   = -O3 -Wall
 CFLAGS  += $(INCLUDE) -Iinclude -fPIC
-LIBS     = -nodefaultlibs -lgcc -lc -luClibc++ -lm -lpthread -lasound
+LIBS     = -nodefaultlibs -lgcc -lc -luClibc++ -lm -lc -lpthread -lasound
 
 REALTIME = yes
 ifeq ($(REALTIME),yes)
@@ -71,10 +72,10 @@ endif
 DEFS    += -DRAWWAVE_PATH=\"$(RAWWAVES)\"
 
 %.o : %.cpp $(OBJECT_PATH)/.placeholder
-	$(CXX) $(CFLAGS) $(DEFS) -c $(<) -o $(OBJECT_PATH)/$@
+	$(CC) $(CFLAGS) $(DEFS) -c $(<) -o $(OBJECT_PATH)/$@
 
 %.o : ../src/include/%.cpp $(OBJECT_PATH)/.placeholder
-	$(CXX) $(CFLAGS) $(DEFS) -c $(<) -o $(OBJECT_PATH)/$@
+	$(CC) $(CFLAGS) $(DEFS) -c $(<) -o $(OBJECT_PATH)/$@
 
 all : $(DEFAULT_TARGETS)
 
@@ -88,7 +89,7 @@ $(STATICLIB) : $(OBJECTS)
 
 $(SHAREDLIB) : $(OBJECTS)
 	$(RM) -f $(@) $(SHAREDLIB).$(MAJOR) $(SHAREDLIB)
-	$(CXX) $(LDFLAGS) -fPIC -shared -Wl,-soname,libstk-$(RELEASE).so -o libstk-$(RELEASE).so $(OBJECT_PATH)/*.o $(LIBS)
+	$(CC) $(LDFLAGS) -fPIC -shared -Wl,-soname,libstk-$(RELEASE).so -o libstk-$(RELEASE).so $(OBJECT_PATH)/*.o $(LIBS)
 	$(LN) -s libstk-$(RELEASE).so $(SHAREDLIB)
 
 install-headers:

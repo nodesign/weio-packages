@@ -29,7 +29,7 @@ define Package/libstk/description
  This package contains a library for The Synthesis Toolkit in C++
 endef
 
-LIBS:=-nodefaultlibs -lgcc -lc -luClibc++ -lm -lpthread -lasound 
+LIBS:=-nodefaultlibs -lgcc -lc -luClibc++ -lm -lc -lpthread -lasound
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
